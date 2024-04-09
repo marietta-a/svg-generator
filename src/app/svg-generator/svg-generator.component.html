@@ -1,0 +1,29 @@
+<div style=" display: flex; align-items: center; justify-content: center;">
+    <div style=" flex-direction: column;">
+        <svg id="svg">
+            <g>
+              <rect x="0" y="0" [attr.width] = "w" [attr.height]="h"
+                [attr.fill]="fillColor" (click)="changeColor()" 
+                [innerText]="p"
+                style="color: white;"
+                />
+               <text x="0" y="50">Perimeter = {{getPerimenter(w, h)}}</text> 
+               <!-- <text x="120" y="50">Click the rectangle to change the fill color</text>  -->
+            
+            </g>
+        </svg>
+    </div>
+    
+
+    <div>
+        <div class="mb-3">
+            <label for="wRange" class="form-label">Width: </label>
+            <input type="range"  class="form-control" min="10" max="500" [attr.formControl]="wRange" [attr.value] = "wRange.value" (input)="widthChanged($event)">
+        </div>
+        
+        <div class="mb-3">
+            <label for="wRange" class="form-label">Height: </label>
+            <input type="range"  class="form-control" min="10" max="500" [attr.formControl]="hRange" [attr.value] = "wRange.value" (input)="heightChanged($event)">
+        </div>
+    </div>
+</div>
