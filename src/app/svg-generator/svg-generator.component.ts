@@ -1,24 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import {SVGFigureDimensions} from '../../core/svgFigureDimension';
+import { SvgServiceService } from '../../services/svg-service.service';
 
 @Component({
   selector: 'app-svg-generator',
   standalone: true,
   imports: [
   ],
+  providers: [
+    SvgServiceService
+  ],
   templateUrl: './svg-generator.component.html',
   styleUrl: './svg-generator.component.css'
 })
-export class SvgGeneratorComponent {
+export class SvgGeneratorComponent implements OnInit {
   fillColor = 'rgb(255, 0, 0)';
-  w: number = 150;
+  svgDimension: SVGFigureDimensions = {
+    Width: 0,
+    Height: 0
+  }
   wRange = new FormControl(150);
-  h: number = 100;
   hRange = new FormControl(100);
-  p: number = this.getPerimenter(this.w, this.h);
+  p: number = this.getPerimenter(this.svgDimension.Width, this.svgDimension.Height);
 
-  constructor(){
-    
+  constructor(private srv: SvgServiceService){
+     
+  }
+  ngOnInit(): void {
+     this.srv.getSVGDimensions().subscribe((data: any) => {
+      this.svgDimension.Height = parseInt(data.height);
+      this.svgDimension.Width = parseInt(data.width);
+     })
   }
 
   changeColor() {
@@ -33,12 +46,21 @@ export class SvgGeneratorComponent {
   }
 
   widthChanged(e: any){
+    
     const newValue = (e.target as HTMLInputElement).value;
-    this.w = parseInt(newValue);
+    this.svgDimension.Width = parseInt(newValue);
+    this.createDimensions();
   }
 
   heightChanged(e: any){
     const newValue = (e.target as HTMLInputElement).value;
-    this.h = parseInt(newValue);
+    this.svgDimension.Height = parseInt(newValue);
+    this.createDimensions();
+  }
+
+  createDimensions(){
+     this.srv.createSVGDimensions(this.svgDimension).subscribe((value: any) => {
+       console.log(value);
+     });
   }
 }
